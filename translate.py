@@ -24,7 +24,7 @@ model.to(device)
 translation_pipeline = pipeline('text-generation', model=model, tokenizer=tokenizer, device=0 if torch.cuda.is_available() else -1)
 
 # Create an empty DataFrame to store the responses
-responses = pd.DataFrame(columns=['Response'])
+responses = []
 
 # Iterate over the sentences in the english DataFrame
 for index, row in english.iterrows():
@@ -33,7 +33,10 @@ for index, row in english.iterrows():
     # Translate the sentence
     translation = translation_pipeline(sentence)
     # Append the translated text to the responses DataFrame
-    responses = responses.append({'Response': translation[0]['translation_text']}, ignore_index=True)
+    responses = responses.append(translation[0]['translation_text'])
+
+# Convert the list to a DataFrame
+responses_df = pd.DataFrame(responses, columns=['Response'])
 
 print(responses.head())
 # Save the responses to a CSV file
