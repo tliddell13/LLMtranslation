@@ -1,5 +1,6 @@
 import pandas as pd
 from transformers import AutoTokenizer, AutoModelForCausalLM, pipeline
+import torch
 
 # Specify the file path
 english_path = "wmt07/dev/nc-dev2007.en"
@@ -13,16 +14,24 @@ spanish = pd.read_csv(spanish_path, delimiter="\t", header=None)
 tokenizer = AutoTokenizer.from_pretrained("/users/adbt150/archive/Llama-2-7b-hf")
 model = AutoModelForCausalLM.from_pretrained("/users/adbt150/archive/Llama-2-7b-hf")
 
+# Check if a GPU is available and if not, use a CPU
+device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+
+# Move the model to the device
+model.to(device)
+
 # Create a translation pipeline
-translation_pipeline = pipeline('translation_en_to_es', model=model, tokenizer=tokenizer)
+translation_pipeline = pipeline('text-generation', model=model, tokenizer=tokenizer, device=0 if torch.cuda.is_available() else -1)
 
 # Create an empty DataFrame to store the responses
 responses = pd.DataFrame(columns=['Response'])
 
 # Iterate over the sentences in the english DataFrame
 for index, row in english.iterrows():
+    # Move the sentence to the device
+    sentence = "Translate this to spanish: " + row[0]
     # Translate the sentence
-    translation = translation_pipeline(row[0])
+    translation = translation_pipeline(sentence)
     # Append the translated text to the responses DataFrame
     responses = responses.append({'Response': translation[0]['translation_text']}, ignore_index=True)
 
