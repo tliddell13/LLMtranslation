@@ -33,7 +33,7 @@ for index, row in english.iterrows():
     # Translate the sentence
     translation = translation_pipeline(sentence)
     # Append the translated text to the responses DataFrame
-    responses = responses.append(translation[0]['translation_text'])
+    responses = responses.append(translation[0]['generated_text'])
 
 # Convert the list to a DataFrame
 responses_df = pd.DataFrame(responses, columns=['Response'])
