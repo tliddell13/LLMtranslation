@@ -1,5 +1,5 @@
 import pandas as pd
-from transformers import AutoCausalLM, AutoTokenizer
+from transformers import AutoConfig, AutoTokenizer
 # Load txt files into a pandas dataframe
 
 # Specify the file path
@@ -12,7 +12,7 @@ spanish = pd.read_csv(spanish_path, delimiter="\t", header=None)
 
 # Initialize the tokenizer and model
 tokenizer = AutoTokenizer.from_pretrained("/users/adbt150/archive/Llama-2-7b-hf")
-model = AutoCausalLM.from_pretrained("/users/adbt150/archive/Llama-2-7b-hf")
+model = AutoConfig.from_pretrained("/users/adbt150/archive/Llama-2-7b-hf")
 
 # Create an empty DataFrame to store the responses
 responses = pd.DataFrame(columns=['Response'])
@@ -33,3 +33,4 @@ for index, row in english.iterrows():
 print(responses.head())
 # Save the responses to a CSV file
 responses.to_csv("responses.csv", index=False)
+
