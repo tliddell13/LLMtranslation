@@ -1,5 +1,5 @@
 import pandas as pd
-from transformers import AutoTokenizer, AutoModelForSeq2SeqLM, pipeline
+from transformers import AutoTokenizer, AutoConfig, pipeline
 
 # Specify the file path
 english_path = "wmt07/dev/nc-dev2007.en"
@@ -11,7 +11,7 @@ spanish = pd.read_csv(spanish_path, delimiter="\t", header=None)
 
 # Initialize the tokenizer and model
 tokenizer = AutoTokenizer.from_pretrained("/users/adbt150/archive/Llama-2-7b-hf")
-model = AutoModelForSeq2SeqLM.from_pretrained("/users/adbt150/archive/Llama-2-7b-hf")
+model = AutoConfig.from_pretrained("/users/adbt150/archive/Llama-2-7b-hf")
 
 # Create a translation pipeline
 translation_pipeline = pipeline('translation_en_to_es', model=model, tokenizer=tokenizer)
