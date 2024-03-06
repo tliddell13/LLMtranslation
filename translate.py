@@ -23,7 +23,7 @@ model.to(device)
 # Create a translation pipeline
 translation_pipeline = pipeline('text-generation', model=model, tokenizer=tokenizer, device=0 if torch.cuda.is_available() else -1)
 
-# Create an empty DataFrame to store the responses
+# Create an empty list to store the responses
 responses = []
 
 # Iterate over the sentences in the english DataFrame
@@ -33,7 +33,7 @@ for index, row in english.iterrows():
     # Translate the sentence
     translation = translation_pipeline(sentence)
     # Append the translated text to the responses DataFrame
-    responses = responses.append(translation[0]['generated_text'])
+    responses.append(translation[0]['generated_text'])
 
 # Convert the list to a DataFrame
 responses_df = pd.DataFrame(responses, columns=['Response'])
