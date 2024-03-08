@@ -38,7 +38,6 @@ for index, row in english.iterrows():
 # Convert the list to a DataFrame
 responses_df = pd.DataFrame(responses, columns=['Response'])
 
-print(responses.head())
 # Save the responses to a CSV file
 responses.to_csv("responses.csv", index=False)
 
