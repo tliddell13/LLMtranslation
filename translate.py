@@ -1,13 +1,5 @@
 import pandas as pd
-from transformers import (
-    AutoModelForCausalLM,
-    AutoTokenizer,
-    BitsAndBytesConfig,
-    HfArgumentParser,
-    TrainingArguments,
-    pipeline,
-    logging,
-)
+from transformers import AutoTokenizer, AutoModelForCausalLM, pipeline
 import torch
 
 # Specify the file path
@@ -18,58 +10,20 @@ spanish_path = "wmt07/dev/nc-dev2007.es"
 english = pd.read_csv(english_path, delimiter="\t", header=None)
 spanish = pd.read_csv(spanish_path, delimiter="\t", header=None)
 
-# Activate 4-bit precision base model loading
-use_4bit = True
-# Activate nested quantization for 4-bit base models
-use_nested_quant = False
-# Compute dtype for 4-bit base models
-bnb_4bit_compute_dtype = "float16"
-# Quantization type (fp4 or nf4)
-bnb_4bit_quant_type = "nf4"
-# Load the entire model on the GPU 0
-device_map = {"": 0}
-
-def load_model(model_name):
-    # Load tokenizer and model with QLoRA configuration
-    compute_dtype = getattr(torch, bnb_4bit_compute_dtype)
-
-    bnb_config = BitsAndBytesConfig(
-        load_in_4bit=use_4bit,
-        bnb_4bit_quant_type=bnb_4bit_quant_type,
-        bnb_4bit_compute_dtype=compute_dtype,
-        bnb_4bit_use_double_quant=use_nested_quant,
-    )
-
-    if compute_dtype == torch.float16 and use_4bit:
-        major, _ = torch.cuda.get_device_capability()
-        if major >= 8:
-            print("=" * 80)
-            print("Your GPU supports bfloat16, you can accelerate training with the argument --bf16")
-            print("=" * 80)
-
-    model = AutoModelForCausalLM.from_pretrained(
-        model_name,
-        device_map=device_map,
-        quantization_config=bnb_config
-    )
-
-    model.config.use_cache = False
-    model.config.pretraining_tp = 1
-
-    # Load Tokenizer
-    tokenizer = AutoTokenizer.from_pretrained(model_name, trust_remote_code=True)
-    tokenizer.pad_token = tokenizer.eos_token
-    tokenizer.padding_side = "right"
-
-    return model, tokenizer
-
 # Initialize the tokenizer and model
-model, tokenizer = load_model("/users/adbt150/archive/Llama-2-7b-hf")
+tokenizer = AutoTokenizer.from_pretrained("/users/adbt150/archive/Llama-2-7b-hf")
+model = AutoModelForCausalLM.from_pretrained("/users/adbt150/archive/Llama-2-7b-hf")
+
+# Check if a GPU is available and if not, use a CPU
+device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+
+# Move the model to the device
+model.to(device)
 
 # Create a translation pipeline
-translation_pipeline = pipeline('text-generation', model=model, tokenizer=tokenizer, max_length=200)
+translation_pipeline = pipeline('text-generation', model=model, tokenizer=tokenizer, device=0 if torch.cuda.is_available() else -1)
 
-# Create an empty list to store the responses
+# Create an empty list to store the response
 responses = []
 
 # Iterate over the sentences in the english DataFrame
@@ -86,5 +40,6 @@ responses_df = pd.DataFrame(responses, columns=['Response'])
 
 # Save the responses to a CSV file
 responses.to_csv("responses.csv", index=False)
+
 
 
