@@ -1,8 +1,9 @@
 import pandas as pd
 from transformers import AutoTokenizer, AutoModelForCausalLM, pipeline
 import torch
+from torch.utils.data import Dataset
 
-class TranslationDataset(torch.utils.dataset):
+class TranslationDataset(Dataset):
     def __init__(self, csv_file):
         self.data = pd.read_csv(csv_file, delimiter="\t", header=None)
 
