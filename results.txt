@@ -1,0 +1,56 @@
+[38;5;127mlibs[0m/[38;5;172mnvidia-cuda[0m/[38;5;67m11.2.0[0m/[38;5;68mbin[0m
+ |
+ [0;32mOK[0m
+Mon Mar 11 12:02:57 2024       
++---------------------------------------------------------------------------------------+
+| NVIDIA-SMI 535.154.05             Driver Version: 535.154.05   CUDA Version: 12.2     |
+|-----------------------------------------+----------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id        Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |         Memory-Usage | GPU-Util  Compute M. |
+|                                         |                      |               MIG M. |
+|=========================================+======================+======================|
+|   0  NVIDIA A100-PCIE-40GB          Off | 00000000:12:00.0 Off |                    0 |
+| N/A   30C    P0              34W / 250W |      0MiB / 40960MiB |      0%      Default |
+|                                         |                      |             Disabled |
++-----------------------------------------+----------------------+----------------------+
+                                                                                         
++---------------------------------------------------------------------------------------+
+| Processes:                                                                            |
+|  GPU   GI   CI        PID   Type   Process name                            GPU Memory |
+|        ID   ID                                                             Usage      |
+|=======================================================================================|
+|  No running processes found                                                           |
++---------------------------------------------------------------------------------------+
+2024-03-11 12:03:12.485029: I tensorflow/core/util/port.cc:113] oneDNN custom operations are on. You may see slightly different numerical results due to floating-point round-off errors from different computation orders. To turn them off, set the environment variable `TF_ENABLE_ONEDNN_OPTS=0`.
+2024-03-11 12:03:12.549076: I tensorflow/core/platform/cpu_feature_guard.cc:210] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+To enable the following instructions: AVX2 AVX512F AVX512_VNNI FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
+2024-03-11 12:03:13.673338: W tensorflow/compiler/tf2tensorrt/utils/py_utils.cc:38] TF-TRT Warning: Could not find TensorRT
+Traceback (most recent call last):
+  File "/users/adbt150/miniconda3/envs/llm/lib/python3.12/importlib/metadata/__init__.py", line 397, in from_name
+    return next(cls.discover(name=name))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+StopIteration
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/users/adbt150/LLMtranslation/translate.py", line 78, in <module>
+    model, tokenizer = load_model("/users/adbt150/archive/Llama-2-7b-hf")
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/users/adbt150/LLMtranslation/translate.py", line 47, in load_model
+    bnb_config = BitsAndBytesConfig(
+                 ^^^^^^^^^^^^^^^^^^^
+  File "/users/adbt150/miniconda3/envs/llm/lib/python3.12/site-packages/transformers/utils/quantization_config.py", line 265, in __init__
+    self.post_init()
+  File "/users/adbt150/miniconda3/envs/llm/lib/python3.12/site-packages/transformers/utils/quantization_config.py", line 311, in post_init
+    if self.load_in_4bit and not version.parse(importlib.metadata.version("bitsandbytes")) >= version.parse(
+                                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/users/adbt150/miniconda3/envs/llm/lib/python3.12/importlib/metadata/__init__.py", line 888, in version
+    return distribution(distribution_name).version
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/users/adbt150/miniconda3/envs/llm/lib/python3.12/importlib/metadata/__init__.py", line 861, in distribution
+    return Distribution.from_name(distribution_name)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/users/adbt150/miniconda3/envs/llm/lib/python3.12/importlib/metadata/__init__.py", line 399, in from_name
+    raise PackageNotFoundError(name)
+importlib.metadata.PackageNotFoundError: No package metadata was found for bitsandbytes
