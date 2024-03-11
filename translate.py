@@ -14,12 +14,15 @@ from torch.utils.data import Dataset
 class TranslationDataset(Dataset):
     def __init__(self, csv_file):
         self.data = pd.read_csv(csv_file, delimiter="\t", header=None)
+        self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
     def __len__(self):
         return len(self.data)
 
     def __getitem__(self, idx):
-        return "Translate this to spanish: " + self.data.iloc[idx, 0]
+        text = "Translate this to spanish: " + self.data.iloc[idx, 0]
+        return text.to(self.device)
+       
 
 # Specify the file path
 english_path = "wmt07/dev/nc-dev2007.en"
@@ -76,6 +79,10 @@ def load_model(model_name):
 
 # Initialize the tokenizer and model
 model, tokenizer = load_model("/users/adbt150/archive/Llama-2-7b-hf")
+
+model.to("cuda")
+
+print("Model Device:", next(model.parameters()).device)
 
 # Then, when you create the pipeline:
 dataset = TranslationDataset(english_path)
