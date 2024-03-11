@@ -79,7 +79,7 @@ model, tokenizer = load_model("/users/adbt150/archive/Llama-2-7b-hf")
 
 # Then, when you create the pipeline:
 dataset = TranslationDataset(english_path)
-translation_pipeline = pipeline('text-generation', model=model, tokenizer=tokenizer, device=0 if torch.cuda.is_available() else -1)
+translation_pipeline = pipeline('text-generation', model=model, tokenizer=tokenizer)
 
 # And when you generate the translations:
 responses = translation_pipeline(dataset)
