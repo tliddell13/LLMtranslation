@@ -39,7 +39,7 @@ bnb_4bit_compute_dtype = "float16"
 # Quantization type (fp4 or nf4)
 bnb_4bit_quant_type = "nf4"
 # Load the entire model on the GPU 0
-device_map = {"": 0}
+device_map = {"cuda": 0}
 
 def load_model(model_name):
     # Load tokenizer and model with QLoRA configuration
@@ -77,8 +77,6 @@ def load_model(model_name):
 
 # Initialize the tokenizer and model
 model, tokenizer = load_model("/users/adbt150/archive/Llama-2-7b-hf")
-
-model.to("cuda")
 
 print("Model Device:", next(model.parameters()).device)
 
