@@ -14,14 +14,12 @@ from torch.utils.data import Dataset
 class TranslationDataset(Dataset):
     def __init__(self, csv_file):
         self.data = pd.read_csv(csv_file, delimiter="\t", header=None)
-        self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
     def __len__(self):
         return len(self.data)
 
     def __getitem__(self, idx):
         text = "Translate this to spanish: " + self.data.iloc[idx, 0]
-        return text.to(self.device)
        
 
 # Specify the file path
