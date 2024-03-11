@@ -30,39 +30,12 @@ spanish_path = "wmt07/dev/nc-dev2007.es"
 english = pd.read_csv(english_path, delimiter="\t", header=None)
 spanish = pd.read_csv(spanish_path, delimiter="\t", header=None)
 
-# Activate 4-bit precision base model loading
-use_4bit = True
-# Activate nested quantization for 4-bit base models
-use_nested_quant = False
-# Compute dtype for 4-bit base models
-bnb_4bit_compute_dtype = "float16"
-# Quantization type (fp4 or nf4)
-bnb_4bit_quant_type = "nf4"
-# Load the entire model on the GPU 1
-device_map = {"": 1}
-
 def load_model(model_name):
-    # Load tokenizer and model with QLoRA configuration
-    compute_dtype = getattr(torch, bnb_4bit_compute_dtype)
-
-    bnb_config = BitsAndBytesConfig(
-        load_in_4bit=use_4bit,
-        bnb_4bit_quant_type=bnb_4bit_quant_type,
-        bnb_4bit_compute_dtype=compute_dtype,
-        bnb_4bit_use_double_quant=use_nested_quant,
-    )
-
-    if compute_dtype == torch.float16 and use_4bit:
-        major, _ = torch.cuda.get_device_capability()
-        if major >= 8:
-            print("=" * 80)
-            print("Your GPU supports bfloat16, you can accelerate training with the argument --bf16")
-            print("=" * 80)
-
+    # Load Model
     model = AutoModelForCausalLM.from_pretrained(
         model_name,
-        device_map=device_map,
-        quantization_config=bnb_config
+        device_map="auto",
+        load_in_16bit = True
     )
 
     model.config.use_cache = False
