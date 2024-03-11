@@ -5,26 +5,15 @@ from transformers import (
     pipeline
 )
 import torch
-from torch.utils.data import Dataset
-
-class TranslationDataset(Dataset):
-    def __init__(self, csv_file):
-        self.data = pd.read_csv(csv_file, delimiter="\t", header=None)
-
-    def __len__(self):
-        return len(self.data)
-
-    def __getitem__(self, idx):
-        text = "Translate this to spanish: " + self.data.iloc[idx, 0]
-       
+from torch.utils.data import Dataset       
 
 # Specify the file path
 english_path = "wmt07/dev/nc-dev2007.en"
 spanish_path = "wmt07/dev/nc-dev2007.es"
 
 # Load the text file into a dataframe
-english = pd.read_csv(english_path, delimiter="\t", header=None)
-spanish = pd.read_csv(spanish_path, delimiter="\t", header=None)
+english_df = pd.read_csv(english_path, delimiter="\t", header=None)
+spanish_df = pd.read_csv(spanish_path, delimiter="\t", header=None)
 
 def load_model(model_name):
     # Load Model
@@ -49,15 +38,19 @@ model, tokenizer = load_model("/users/adbt150/archive/Llama-2-7b-hf")
 
 print("Model Device:", next(model.parameters()).device)
 
-# Then, when you create the pipeline:
-dataset = TranslationDataset(english_path)
 translation_pipeline = pipeline('text-generation', model=model, tokenizer=tokenizer)
 
-# And when you generate the translations:
-responses = translation_pipeline(dataset)
+# Initialize a list to store responses
+responses = []
+
+# Loop through the dataframe and generate translations
+for idx, row in english_df.iterrows():
+    text = "Translate this to spanish: " + row[0]
+    response = translation_pipeline(text)
+    responses.append(response[0]['generated_text'])
 
 # Convert the list to a DataFrame
-responses_df = pd.DataFrame(responses, columns=['Response'])
+responses_df = pd.DataFrame({'Response': responses})
 
 # Save the responses to a CSV file
 responses.to_csv("responses.csv", index=False)
