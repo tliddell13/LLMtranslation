@@ -38,8 +38,8 @@ use_nested_quant = False
 bnb_4bit_compute_dtype = "float16"
 # Quantization type (fp4 or nf4)
 bnb_4bit_quant_type = "nf4"
-# Load the entire model on the GPU 0
-device_map = {"cuda": 0}
+# Load the entire model on the GPU 1
+device_map = {"": 1}
 
 def load_model(model_name):
     # Load tokenizer and model with QLoRA configuration
