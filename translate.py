@@ -2,11 +2,7 @@ import pandas as pd
 from transformers import (
     AutoModelForCausalLM,
     AutoTokenizer,
-    BitsAndBytesConfig,
-    HfArgumentParser,
-    TrainingArguments,
-    pipeline,
-    logging,
+    pipeline
 )
 import torch
 from torch.utils.data import Dataset
@@ -35,7 +31,7 @@ def load_model(model_name):
     model = AutoModelForCausalLM.from_pretrained(
         model_name,
         device_map="auto",
-        load_in_16bit = True
+        load_in_8bit = True
     )
 
     model.config.use_cache = False
