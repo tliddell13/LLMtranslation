@@ -61,6 +61,12 @@ translation_pipeline = pipeline('text-generation', model=model, tokenizer=tokeni
 # Initialize a list to store responses
 responses = []
 
+prompt = "What is the airspeed velocity of an unladen swallow?"
+
+pipe = pipeline(task="text-generation", model=model, tokenizer=tokenizer, max_length=200)
+result = pipe(f"<s>[INST] {prompt} [/INST]")
+print(result[0]['generated_text'])
+"""
 # Loop through the dataframe and generate translations in batches
 for idx, row in english_df.iterrows():
     text = "Translate this to spanish: " + row[0]
@@ -74,4 +80,4 @@ responses_df = pd.DataFrame({'Response': responses})
 
 # Save the responses to a CSV file
 responses.to_csv("responses.csv", index=False)
-
+"""
