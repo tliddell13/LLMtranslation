@@ -2,7 +2,11 @@ import pandas as pd
 from transformers import (
     AutoModelForCausalLM,
     AutoTokenizer,
-    pipeline
+    BitsAndBytesConfig,
+    HfArgumentParser,
+    TrainingArguments,
+    pipeline,
+    logging,
 )
 import torch
 from torch.utils.data import Dataset       
@@ -15,12 +19,26 @@ spanish_path = "wmt07/dev/nc-dev2007.es"
 english_df = pd.read_csv(english_path, delimiter="\t", header=None)
 spanish_df = pd.read_csv(spanish_path, delimiter="\t", header=None)
 
+# Compute dtype for 4-bit base models
+bnb_4bit_compute_dtype = "float16"
+
+# Quantization type (fp4 or nf4)
+bnb_4bit_quant_type = "nf4"
+
 def load_model(model_name):
+    compute_dtype = getattr(torch, bnb_4bit_compute_dtype)
+
+    bnb_config = BitsAndBytesConfig(
+        load_in_8bit=True,
+        bnb_4bit_quant_type=bnb_4bit_quant_type,
+        bnb_4bit_compute_dtype=compute_dtype,
+        bnb_4bit_use_double_quant=True,
+    )
     # Load Model
     model = AutoModelForCausalLM.from_pretrained(
         model_name,
         device_map="auto",
-        load_in_8bit = True
+        quantization_config=bnb_config
     )
 
     model.config.use_cache = False
@@ -43,13 +61,11 @@ translation_pipeline = pipeline('text-generation', model=model, tokenizer=tokeni
 # Initialize a list to store responses
 responses = []
 
-english_df = english_df[0]
-
 # Loop through the dataframe and generate translations in batches
-for row in english_df:
+for idx, row in english_df:
     text = "Translate this to spanish: " + row[0]
     print(text)
-    response = translation_pipeline(text)
+    response = translation_pipeline(text, max_length=1000)
     print(response)
     responses.append(response[0]['generated_text'])
 
