@@ -43,12 +43,14 @@ translation_pipeline = pipeline('text-generation', model=model, tokenizer=tokeni
 # Initialize a list to store responses
 responses = []
 
-english_df = english_df[:5]
+english_df = english_df[0]
 
 # Loop through the dataframe and generate translations in batches
-for idx, row in english_df.iterrows():
+for row in english_df.iterrows():
     text = "Translate this to spanish: " + row[0]
+    print(text)
     response = translation_pipeline(text)
+    print(response)
     responses.append(response[0]['generated_text'])
 
 # Convert the list to a DataFrame
