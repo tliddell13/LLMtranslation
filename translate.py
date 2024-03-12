@@ -43,19 +43,13 @@ translation_pipeline = pipeline('text-generation', model=model, tokenizer=tokeni
 # Initialize a list to store responses
 responses = []
 
-# Define batch size
-batch_size = 10
+english_df = english_df[:5]
 
 # Loop through the dataframe and generate translations in batches
-for idx in range(0, len(english_df), batch_size):
-    batch_texts = ["Translate this to spanish: " + text for text in english_df.iloc[idx:idx+batch_size, 0]]
-    batch_texts = batch_texts.to(device='cuda')
-    batch_responses = translation_pipeline(batch_texts)
-    batch_responses.cpu().detach() 
-    for response in batch_responses:
-        responses.extend([r['generated_text'] for r in response])
-
-
+for idx, row in english_df.iterrows():
+    text = "Translate this to spanish: " + row[0]
+    response = translation_pipeline(text)
+    responses.append(response[0]['generated_text'])
 
 # Convert the list to a DataFrame
 responses_df = pd.DataFrame({'Response': responses})
