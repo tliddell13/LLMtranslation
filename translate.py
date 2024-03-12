@@ -61,9 +61,9 @@ translation_pipeline = pipeline('text-generation', model=model, tokenizer=tokeni
 # Initialize a list to store responses
 responses = []
 
-prompt = "What is the airspeed velocity of an unladen swallow?"
+prompt = "Translate this to spanish: How are you?"
 
-pipe = pipeline(task="text-generation", model=model, tokenizer=tokenizer, max_length=200)
+pipe = pipeline(task="text-generation", model=model, tokenizer=tokenizer, max_length=30)
 result = pipe(f"<s>[INST] {prompt} [/INST]")
 print(result[0]['generated_text'])
 """
@@ -71,7 +71,7 @@ print(result[0]['generated_text'])
 for idx, row in english_df.iterrows():
     text = "Translate this to spanish: " + row[0]
     print(text)
-    response = translation_pipeline(text, max_length=1000)
+    response = translation_pipeline(text, max_length=50)
     print(response)
     responses.append(response[0]['generated_text'])
 
