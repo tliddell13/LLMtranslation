@@ -46,7 +46,7 @@ responses = []
 english_df = english_df[0]
 
 # Loop through the dataframe and generate translations in batches
-for row in english_df.iterrows():
+for row in english_df:
     text = "Translate this to spanish: " + row[0]
     print(text)
     response = translation_pipeline(text)
