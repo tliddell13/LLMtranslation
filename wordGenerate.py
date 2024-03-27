@@ -12,7 +12,7 @@ tokenizer = AutoTokenizer.from_pretrained(model_id, trust_remote_code=True)
 model = AutoModelForCausalLM.from_pretrained(model_id, device_map="auto")
 
 # Use the pipeline to generate text
-generator = pipeline("text2text-generation", model=model, tokenizer=tokenizer, device=0)
+generator = pipeline("text2text-generation", model=model, tokenizer=tokenizer)
 
 prompt = "Write a sentence with the word 'dog' in it."
 
