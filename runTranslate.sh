@@ -27,4 +27,4 @@ export MASTER_PORT=8214
 # The rank of this worker, should be in {0, ..., WORKER_CNT-1}, for single-worker training, please set to 0
 export RANK=0
 
-python ~/LLMtranslation/translate.py 
+python ~/LLMtranslation/wordGenerate.py
