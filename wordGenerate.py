@@ -7,12 +7,12 @@ from transformers import (
 import torch
 from torch.utils.data import Dataset       
 
-model_id = "/users/adbt150/archive/Llama-2-7b-hf"
+model_id = "/users/adbt150/archive/Mixtral-8x7B-Instruct-v0.1"
 tokenizer = AutoTokenizer.from_pretrained(model_id, trust_remote_code=True)
 model = AutoModelForCausalLM.from_pretrained(model_id, device_map="auto")
 
 # Use the pipeline to generate text
-generator = pipeline("text2text-generation", model=model, tokenizer=tokenizer)
+generator = pipeline("text-generation", model=model, tokenizer=tokenizer, device=0)
 
 prompt = "Write a sentence with the word 'dog' in it."
 
