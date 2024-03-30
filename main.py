@@ -1,6 +1,4 @@
 from wordGenerate import load_model, generate_text
-
-from wordGenerate import load_model, generate_text
 import time
 
 model_id = "/users/adbt150/archive/Llama-2-7b-hf"
