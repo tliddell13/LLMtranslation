@@ -12,7 +12,7 @@ def load_model(model_id):
     tokenizer = AutoTokenizer.from_pretrained(model_id, trust_remote_code=True)
     model = AutoModelForCausalLM.from_pretrained(model_id, device_map="auto")
     # See if fast tokenizer helps
-    tokenizer = PreTrainedTokenizerFast.from_pretrained(tokenizer_object=tokenizer)
+    tokenizer = PreTrainedTokenizerFast(tokenizer_object=tokenizer)
     # Print teh model device
     print("Model Device:", next(model.parameters()).device)
     return tokenizer, model
