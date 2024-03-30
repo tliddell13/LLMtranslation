@@ -16,7 +16,7 @@ def load_model(model_id):
     return tokenizer, model
 
 def generate_text(model, tokenizer, prompt, max_length=30):
-    generator = pipeline("text-generation", model=model, tokenizer=tokenizer, device=0)
+    generator = pipeline("text-generation", model=model, tokenizer=tokenizer)
     answer = generator(prompt, max_length=max_length)
     return answer[0]['generated_text']
 
